@@ -1,20 +1,24 @@
+<!--
+ * @Description:
+ * @Author: cooky
+ * @Date: 2020-01-08 09:31:28
+ * @LastEditors  : cooky
+ * @LastEditTime : 2020-01-09 16:21:22
+ -->
 <template>
 <div v-show="list.length > 0">
-  <button @click="handleClick">点击</button>
-{{list.length}}
+  <button @click="handleClick">切换数据</button>
   <RecycleScroller
     class="scroller"
     :items="list"
-    :item-size="32"
+   :item-size="50"
     key-field="id"
     v-slot="{ item }"
     v-infinite-scroll="loadMore"
-    nfinite-scroll-disabled="busy"
+    infinite-scroll-disabled="busy"
     infinite-scroll-distance="10"
   >
-    <div class="user">
-      {{ item.value }}
-    </div>
+     {{ item.value }}
   </RecycleScroller>
 </div>
 </template>
@@ -30,9 +34,6 @@ for (let i = 0; i < 20; i++) {
   })
 }
 export default {
-  // props: {
-  //   list: Array,
-  // },
   directives: { infiniteScroll },
   data () {
     return {
@@ -50,23 +51,20 @@ export default {
         })
       }
       this.list = []
-      setTimeout(() => {
+      this.$nextTick(() => {
         this.list = otherList
-      }, 200)
+      })
     },
     loadMore: function () {
-      console.log('loadMore')
       this.busy = true
       const length = this.list.length
-      setTimeout(() => {
-        for (var i = length; i < length + 20; i++) {
-          this.list.push({
-            id: i + 1,
-            value: 'item' + (i + 1)
-          })
-        }
-        this.busy = false
-      }, 1000)
+      for (var i = length; i < length + 20; i++) {
+        this.list.push({
+          id: i + 1,
+          value: 'item' + (i + 1)
+        })
+      }
+      this.busy = false
     }
   }
 }
@@ -75,12 +73,5 @@ export default {
 <style scoped>
 .scroller {
   height: 200px;
-}
-
-.user {
-  height: 32%;
-  padding: 0 12px;
-  display: flex;
-  align-items: center;
 }
 </style>
